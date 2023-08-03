@@ -7,4 +7,6 @@ import java.util.Map;
 
 public interface UserService {
     Map<String,Object> save(UserDTO dto);
+
+    User findById(Long id);
 }

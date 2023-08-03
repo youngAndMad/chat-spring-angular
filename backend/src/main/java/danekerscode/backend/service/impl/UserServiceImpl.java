@@ -3,6 +3,7 @@ package danekerscode.backend.service.impl;
 import danekerscode.backend.dto.TokenResponse;
 import danekerscode.backend.dto.UserDTO;
 import danekerscode.backend.enums.TokenType;
+import danekerscode.backend.exception.EntityNotFoundException;
 import danekerscode.backend.mapper.UserMapper;
 import danekerscode.backend.model.User;
 import danekerscode.backend.repository.UserRepository;
@@ -33,5 +34,11 @@ public class UserServiceImpl implements UserService {
         );
 
         return Map.of("user" , user , "tokens" , tokens);
+    }
+
+    @Override
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(User.class , id));
     }
 }

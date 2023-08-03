@@ -10,11 +10,6 @@ import org.mapstruct.Mapping;
 public interface UserMapper {
 
     @Mapping(target = "id" , ignore = true)
-    @Mapping(target = "gender" , expression = "java(mapGender(dto.gender()))")
     User toModel(UserDTO dto);
-
-    default Gender mapGender(String gender){
-        return Gender.valueOf(gender.toUpperCase());
-    }
 
 }
