@@ -1,0 +1,62 @@
+package danekerscode.backend.security;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
+
+@Component
+@RequiredArgsConstructor
+public class JwtFilter extends OncePerRequestFilter {
+
+    private final JwtUtil jwtUtil;
+    private final CustomUserDetailsService customUserDetailsService;
+
+
+    @Override
+    protected void doFilterInternal(
+            HttpServletRequest req,
+            HttpServletResponse res,
+            FilterChain chain
+    ) throws ServletException, IOException {
+        System.out.println(req.getServletPath());
+        if (req.getServletPath().contains("auth")) {
+            System.out.println("req.getServletPath().contains(\"/api/v1/auth\"))");
+            chain.doFilter(req, res);
+            return;
+        }
+        final String authHeader = req.getHeader("Authorization");
+        final String jwt;
+        final String userEmail;
+        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
+            chain.doFilter(req, res);
+            return;
+        }
+        jwt = authHeader.substring(7);
+        userEmail = jwtUtil.extractUsername(jwt);
+        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = this.customUserDetailsService.loadUserByUsername(userEmail);
+            if (jwtUtil.isTokenValid(jwt, userDetails) ) {
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities()
+                );
+                authToken.setDetails(
+                        new WebAuthenticationDetailsSource().buildDetails(req)
+                );
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
+        }
+        chain.doFilter(req, res);
+    }
+}
