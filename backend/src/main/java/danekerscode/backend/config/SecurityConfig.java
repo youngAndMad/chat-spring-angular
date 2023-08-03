@@ -31,7 +31,6 @@ public class SecurityConfig{
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        System.out.println("created");
         http.csrf()
                 .disable().authorizeHttpRequests()
                 .requestMatchers(

@@ -36,7 +36,7 @@ public class User  extends DateAudit {
             inverseJoinColumns = @JoinColumn(name = "chat_id"),
             joinColumns = @JoinColumn(name = "user_id")
     )
-    private Set<Chat> members;
+    private Set<Chat> chats;
 
     @OneToMany(
             mappedBy = "sender",

@@ -28,9 +28,7 @@ public class JwtFilter extends OncePerRequestFilter {
             HttpServletResponse res,
             FilterChain chain
     ) throws ServletException, IOException {
-        System.out.println(req.getServletPath());
-        if (req.getServletPath().contains("auth")) {
-            System.out.println("req.getServletPath().contains(\"/api/v1/auth\"))");
+        if (req.getServletPath().contains("auth") ||req.getServletPath().contains("swagger")) {
             chain.doFilter(req, res);
             return;
         }

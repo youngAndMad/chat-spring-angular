@@ -11,7 +11,8 @@ import java.util.List;
 @Mapper
 public interface ChatMapper {
 
-    @Mapping(target = "id" , ignore = true)
     @Mapping(target = "members" ,source = "users")
+    @Mapping(target = "messages" , ignore = true)
+    @Mapping(target = "id" , ignore = true)
     Chat toModel(ChatDTO dto , List<User> users);
 }
