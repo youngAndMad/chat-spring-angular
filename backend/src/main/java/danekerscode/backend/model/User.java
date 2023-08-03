@@ -1,6 +1,8 @@
 package danekerscode.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import danekerscode.backend.enums.Gender;
 import danekerscode.backend.model.utils.DateAudit;
 import jakarta.persistence.*;
@@ -17,6 +19,10 @@ import java.util.Set;
 @Table(name = "users")
 @Getter
 @Setter
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id"
+)
 public class User  extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,5 +48,6 @@ public class User  extends DateAudit {
             mappedBy = "sender",
             cascade = CascadeType.ALL
     )
+    @JsonIgnore
     private List<Message> messages;
 }

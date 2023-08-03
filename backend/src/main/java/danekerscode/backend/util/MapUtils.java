@@ -1,12 +1,14 @@
 package danekerscode.backend.util;
 
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
 @UtilityClass
+@Slf4j
 public class MapUtils {
     public static Map<String, Object> objectToMap(Object obj) {
         Map<String, Object> map = new HashMap<>();
@@ -25,7 +27,7 @@ public class MapUtils {
 
                 field.setAccessible(false);
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                log.error("error:{}" , e.getMessage());
             }
         }
 
