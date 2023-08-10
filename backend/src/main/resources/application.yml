@@ -5,11 +5,11 @@ spring:
     url: jdbc:postgresql://localhost:5432/chat
     driver-class-name: org.postgresql.Driver
   jpa:
+    repositories:
+      bootstrap_mode: default
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
-    application:
-    name: backend
     open-in-view: true
 server:
   port: 4317

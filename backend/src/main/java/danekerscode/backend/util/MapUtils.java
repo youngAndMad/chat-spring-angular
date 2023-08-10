@@ -1,5 +1,6 @@
 package danekerscode.backend.util;
 
+import danekerscode.backend.enums.TokenType;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -10,9 +11,8 @@ import java.util.Map;
 @UtilityClass
 @Slf4j
 public class MapUtils {
-    public static Map<String, Object> objectToMap(Object obj) {
+    public static Map<String, Object> toClaims(Object obj , TokenType type) {
         Map<String, Object> map = new HashMap<>();
-
         Class<?> objClass = obj.getClass();
 
         Field[] fields = objClass.getDeclaredFields();
@@ -30,6 +30,8 @@ public class MapUtils {
                 log.error("error:{}" , e.getMessage());
             }
         }
+
+        map.put("token-type" , type.name());
 
         return map;
     }

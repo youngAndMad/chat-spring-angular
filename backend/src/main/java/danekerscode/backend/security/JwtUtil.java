@@ -5,9 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import jakarta.persistence.PrePersist;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -39,8 +37,15 @@ public class JwtUtil {
     }
 
 
-    public String extractUsername(String token) {
+    public String extractUsername(String token, TokenType type) {
+        var claims = extractAllClaims(token);
+        var tokenClaim = claims.get("token-type");
+        if (!tokenClaim.equals(type.name())) {
+            System.out.println("not equals");
+            return null;
+        }
         return extractClaim(token, Claims::getSubject);
+
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -48,8 +53,8 @@ public class JwtUtil {
         return claimsResolver.apply(claims);
     }
 
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
+    public boolean isTokenValid(String token, UserDetails userDetails, TokenType type) {
+        final String username = extractUsername(token, type);
         return username.equals(userDetails.getUsername());
     }
 

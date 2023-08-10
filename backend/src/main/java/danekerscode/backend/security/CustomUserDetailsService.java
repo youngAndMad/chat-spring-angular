@@ -22,6 +22,6 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new InvalidCredentialsException();
         }
 
-        return new CustomUserDetails(optional.get());
+        return optional.get();
     }
 }

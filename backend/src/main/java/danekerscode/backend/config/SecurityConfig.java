@@ -24,7 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@EnableMethodSecurity
+@EnableMethodSecurity()
 public class SecurityConfig {
 
     private final JwtFilter jwtAuthFilter;
@@ -39,10 +39,7 @@ public class SecurityConfig {
     ) throws Exception {
         http.csrf()
                 .disable().authorizeHttpRequests()
-                .requestMatchers(
-                        "/auth/**"
-                )
-                .permitAll()
+                .requestMatchers("/auth/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .authenticationProvider(provider)
