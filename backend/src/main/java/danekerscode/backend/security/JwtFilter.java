@@ -28,14 +28,10 @@ public class JwtFilter extends OncePerRequestFilter {
             HttpServletResponse res,
             FilterChain chain
     ) throws ServletException, IOException {
-        if (req.getServletPath().contains("auth") ||req.getServletPath().contains("swagger")) {
-            chain.doFilter(req, res);
-            return;
-        }
         final String authHeader = req.getHeader("Authorization");
         final String jwt;
         final String userEmail;
-        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             chain.doFilter(req, res);
             return;
         }
@@ -43,7 +39,7 @@ public class JwtFilter extends OncePerRequestFilter {
         userEmail = jwtUtil.extractUsername(jwt);
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.customUserDetailsService.loadUserByUsername(userEmail);
-            if (jwtUtil.isTokenValid(jwt, userDetails) ) {
+            if (jwtUtil.isTokenValid(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,

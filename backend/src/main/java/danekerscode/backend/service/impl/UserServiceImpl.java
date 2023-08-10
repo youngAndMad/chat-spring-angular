@@ -10,6 +10,7 @@ import danekerscode.backend.repository.UserRepository;
 import danekerscode.backend.security.JwtUtil;
 import danekerscode.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -23,10 +24,13 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final JwtUtil jwtUtil;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Map<String, Object> save(UserDTO dto) {
-        var user = userRepository.save(userMapper.toModel(dto));
+        var model = userMapper.toModel(dto);
+        model.setPassword(passwordEncoder.encode(dto.password()));
+        var user = userRepository.save(model);
         var claimMap = objectToMap(user);
         var tokens = new TokenResponse(
                 jwtUtil.generateToken(TokenType.ACCESS,claimMap , user.getEmail()),

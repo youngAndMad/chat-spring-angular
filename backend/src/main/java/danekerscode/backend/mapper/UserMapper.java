@@ -8,9 +8,7 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface UserMapper {
 
-    @Mapping(target = "messages" , ignore = true)
     @Mapping(target = "id" , ignore = true)
-    @Mapping(target ="chats" , ignore = true)
     User toModel(UserDTO dto);
 
 }
